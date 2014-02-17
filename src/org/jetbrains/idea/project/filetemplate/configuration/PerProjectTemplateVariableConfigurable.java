@@ -3,16 +3,10 @@ package org.jetbrains.idea.project.filetemplate.configuration;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.project.filetemplate.PerProjectTemplateManager;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.Properties;
-import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.

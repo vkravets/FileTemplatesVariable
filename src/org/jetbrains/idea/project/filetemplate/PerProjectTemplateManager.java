@@ -21,9 +21,12 @@ import java.util.Properties;
  * Time: 5:35 PM
  */
 @State(name = "ProjectTemplateVariables",
-        storages = {@Storage(file = StoragePathMacros.PROJECT_FILE),
+        storages = {
+                @Storage(file = StoragePathMacros.PROJECT_FILE),
                 @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/template/", scheme = StorageScheme.DIRECTORY_BASED,
-                        stateSplitter = PerProjectTemplateManager.ProjectTemplateStateSplitter.class)})
+                         stateSplitter = PerProjectTemplateManager.ProjectTemplateStateSplitter.class)
+        }
+      )
 public class PerProjectTemplateManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
 
     private Properties projectVariables;
