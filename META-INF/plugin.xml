@@ -1,0 +1,40 @@
+<idea-plugin version="2">
+  <id>org.jetbrains.idea.project.template.variables</id>
+  <name>File Template Variables</name>
+  <version>0.1</version>
+  <vendor email="vova.kravets@gmail.com" url="http://github.com/vkravets/FileTemplateVariable"/>
+
+  <description><![CDATA[
+      This plugins allow to specify or override any variables in the File Template functionality per Project<br>
+    ]]></description>
+
+  <change-notes><![CDATA[
+          Initial Commit
+    ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="93.13"/>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+      <defaultTemplatePropertiesProvider implementation="org.jetbrains.idea.project.filetemplate.PerProjectTemplatePropertiesProvider"/>
+      <projectConfigurable instance="org.jetbrains.idea.project.filetemplate.configuration.PerProjectTemplateVariableConfigurable"/>
+  </extensions>
+
+  <application-components/>
+
+  <project-components>
+      <component>
+          <implementation-class>org.jetbrains.idea.project.filetemplate.PerProjectTemplateManager</implementation-class>
+          <interface-class>org.jetbrains.idea.project.filetemplate.PerProjectTemplateManager</interface-class>
+      </component>
+  </project-components>
+
+  <actions/>
+
+</idea-plugin>
