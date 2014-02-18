@@ -235,11 +235,11 @@ public class TemplateVariablesTable extends JBTable {
         }
 
         public boolean checkName(String name) {
-            return name.length() != 0;
+            return name.length() != 0 && name.toUpperCase().equals(name);
         }
 
         public boolean isOK(String name, String value) {
-            if(name.length() == 0) return false;
+            if(!checkName(name)) return false;
             if (hasVariableWithName(name)) {
                 Messages.showErrorDialog(TemplateVariablesTable.this,
                         ApplicationBundle.message("error.variable.already.exists", name), myTitle);
@@ -251,7 +251,8 @@ public class TemplateVariablesTable extends JBTable {
 
     private class EditValidator implements TemplateVariableEditor.Validator {
         public boolean checkName(String name) {
-            return name.length() != 0 && !PerProjectTemplateManager.getInstance(TemplateVariablesTable.this.project).getProjectVariables().contains(name);
+            return name.length() != 0 && name.toUpperCase().equals(name) &&
+                   !PerProjectTemplateManager.getInstance(TemplateVariablesTable.this.project).getProjectVariables().contains(name);
 
         }
 
