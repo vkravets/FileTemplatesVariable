@@ -27,7 +27,7 @@ public class PerProjectTemplateVariableConfigurable implements Configurable.NoSc
     @Nls
     @Override
     public String getDisplayName() {
-        return "Template Variables";
+        return "File and Code Template Variables";
     }
 
     @Nullable
