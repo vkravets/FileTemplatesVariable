@@ -9,10 +9,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
-          * 18.02.2014:
+          * 0.2 @ 18.02.2014:
              - Change "Template Variables" in the Project Settings to "File and Code Template Variable"
                Thanks to Anonymous on the plugins.jetbrains.com =)
-          * 17.02.2014:
+          * 0.1 @ 17.02.2014:
              - Initial Commit
     ]]>
   </change-notes>
