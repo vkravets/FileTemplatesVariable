@@ -8,14 +8,17 @@
       This plugins allow to specify or override any variables in the File Template functionality per Project<br>
     ]]></description>
 
-  <change-notes><![CDATA[
-          * 0.2 @ 19.02.2014:
-             - Fix issue with saving and loading Default Project's Settings
-             - Change "Template Variables" in the Project Settings to "File and Code Template Variable"
-               Thanks to Anonymous on the plugins.jetbrains.com =)
-          * 0.1 @ 17.02.2014:
-             - Initial Commit
-    ]]>
+  <change-notes><![CDATA[<html>
+          <b>0.2</b> @ 19.02.2014:
+          <ul>
+             <li>Fix: <a href="https://github.com/vkravets/FileTemplatesVariable/issues/1">issue with saving and loading Default Project's Settings</a></li>
+             <li>Change "Template Variables" in the Project Settings to "File and Code Template Variable"<br/>Thanks to Anonymous on the plugins.jetbrains.com =)</li>
+          </ul>
+          <b>0.1</b> @ 17.02.2014:
+          <ul>
+             <li>Initial Commit</li>
+          </ul>
+    </html>]]>
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
