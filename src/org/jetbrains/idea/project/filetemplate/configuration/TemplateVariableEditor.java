@@ -16,8 +16,10 @@
 package org.jetbrains.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -31,91 +33,91 @@ import java.io.IOException;
  * E-Mail: vova.kravets@gmail.com
  * Date: 2/17/14
  * Time: 7:50 PM
-
+ * <p/>
  * Based on: com.intellij.application.options.pathMacros.PathMacroEditor
+ *           author: dsl
+ *
  * @see com.intellij.application.options.pathMacros.PathMacroEditor
- * @author dsl
  */
 public class TemplateVariableEditor extends DialogWrapper {
-  private JTextField myNameField;
-  private JPanel myPanel;
-  private JTextField myValueField;
-  private final Validator myValidator;
+    private JTextField myNameField;
+    private JPanel myPanel;
+    private JTextField myValueField;
+    private final Validator myValidator;
 
-  public interface Validator {
-    boolean checkName(String name);
-    boolean isOK(String name, String value);
-  }
-
-  public TemplateVariableEditor(String title, String macroName, String value, Validator validator) {
-    super(true);
-    setTitle(title);
-    myValidator = validator;
-    myNameField.setText(macroName);
-    DocumentListener documentListener = new DocumentAdapter() {
-      public void textChanged(DocumentEvent event) {
-        updateControls();
-      }
-    };
-    myNameField.getDocument().addDocumentListener(documentListener);
-    myValueField.getDocument().addDocumentListener(documentListener);
-    myValueField.setText(value);
-    init();
-    updateControls();
-  }
-
-  public void setMacroNameEditable(boolean isEditable) {
-    myNameField.setEditable(isEditable);
-  }
-
-  private void updateControls() {
-    final boolean isNameOK = myValidator.checkName(myNameField.getText());
-    getOKAction().setEnabled(isNameOK);
-    if (isNameOK) {
-      final String text = myValueField.getText().trim();
-      getOKAction().setEnabled(text.length() > 0);
+    public interface Validator {
+        boolean checkName(String name);
+        boolean isOK(String name, String value);
+        String getErrorMessage();
     }
-  }
 
-  public JComponent getPreferredFocusedComponent() {
-    return myNameField;
-  }
-
-  @NotNull
-  protected Action[] createActions() {
-    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
-  }
-
-  protected void doHelpAction() {
-  }
-
-  protected void doOKAction() {
-    if (!myValidator.isOK(getName(), getValue())) return;
-    super.doOKAction();
-  }
-
-  public String getName() {
-    return myNameField.getText().trim();
-  }
-
-  public String getValue() {
-    String path = myValueField.getText().trim();
-    File file = new File(path);
-    if (file.isAbsolute()) {
-      try {
-        return file.getCanonicalPath();
-      }
-      catch (IOException ignored) {
-      }
+    public TemplateVariableEditor(String title, String variableName, String value, Validator validator) {
+        super(true);
+        setTitle(title);
+        myValidator = validator;
+        myNameField.setText(variableName);
+        DocumentListener documentListener = new DocumentAdapter() {
+            public void textChanged(DocumentEvent event) {
+                ValidationInfo validationInfo = doValidate();
+                if (validationInfo != null) {
+                    setErrorText(validationInfo.message);
+                } else {
+                    setErrorText(null);
+                }
+            }
+        };
+        myNameField.getDocument().addDocumentListener(documentListener);
+        myValueField.getDocument().addDocumentListener(documentListener);
+        myValueField.setText(value);
+        init();
     }
-    return path;
-  }
 
-  protected JComponent createNorthPanel() {
-    return myPanel;
-  }
+    public void setMacroNameEditable(boolean isEditable) {
+        myNameField.setEditable(isEditable);
+    }
 
-  protected JComponent createCenterPanel() {
-    return null;
-  }
+    public JComponent getPreferredFocusedComponent() {
+        return myNameField;
+    }
+
+    @NotNull
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
+    }
+
+    protected void doHelpAction() {
+    }
+
+    @Nullable
+    @Override
+    protected ValidationInfo doValidate() {
+        if (!myValidator.checkName(getName()) || !myValidator.isOK(getName(), getValue())) {
+            return new ValidationInfo(myValidator.getErrorMessage());
+        }
+        return super.doValidate();
+    }
+
+    public String getName() {
+        return myNameField.getText().trim();
+    }
+
+    public String getValue() {
+        String path = myValueField.getText().trim();
+        File file = new File(path);
+        if (file.isAbsolute()) {
+            try {
+                return file.getCanonicalPath();
+            } catch (IOException ignored) {
+            }
+        }
+        return path;
+    }
+
+    protected JComponent createNorthPanel() {
+        return myPanel;
+    }
+
+    protected JComponent createCenterPanel() {
+        return null;
+    }
 }

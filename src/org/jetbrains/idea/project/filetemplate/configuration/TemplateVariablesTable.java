@@ -2,7 +2,6 @@ package org.jetbrains.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
@@ -24,8 +23,8 @@ import java.util.List;
  * Time: 7:55 PM
  *
  * Based on: com.intellij.application.options.pathMacros.PathMacroTable
+ *           author dsl
  * @see com.intellij.application.options.pathMacros.PathMacroTable
- * @author dsl
  */
 
 
@@ -50,8 +49,8 @@ public class TemplateVariablesTable extends JBTable {
         column.setCellRenderer(new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 final Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                final String macroValue = getVariableValueAt(row);
-                component.setForeground(macroValue.length() == 0
+                final String variableValue = getVariableValueAt(row);
+                component.setForeground(variableValue.length() == 0
                         ? JBColor.RED
                         : isSelected ? table.getSelectionForeground() : table.getForeground());
                 return component;
@@ -73,11 +72,11 @@ public class TemplateVariablesTable extends JBTable {
 
     public void addVariable() {
         final String title = ApplicationBundle.message("title.add.variable");
-        final TemplateVariableEditor macroEditor = new TemplateVariableEditor(title, "", "", new AddValidator(title));
-        macroEditor.show();
-        if (macroEditor.isOK()) {
-            final String name = macroEditor.getName();
-            curTemplateVariables.add(new Pair<String, String>(name, macroEditor.getValue()));
+        final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, "", "", new AddValidator());
+        variableEditor.show();
+        if (variableEditor.isOK()) {
+            final String name = variableEditor.getName();
+            curTemplateVariables.add(new Pair<String, String>(name, variableEditor.getValue()));
             Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
             final int index = indexOfVariableWithName(name);
             tableModel.fireTableDataChanged();
@@ -126,12 +125,8 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     private boolean hasVariableWithName(String name) {
-//        if (PerProjectTemplateManager.getInstance(project).getProjectVariables().contains(name)) {
-//            return true;
-//        }
-
-        for (Pair<String, String> macro : curTemplateVariables) {
-            if (name.equals(macro.getFirst())) {
+        for (Pair<String, String> variableInfo : curTemplateVariables) {
+            if (name.equals(variableInfo.getFirst())) {
                 return true;
             }
         }
@@ -172,21 +167,21 @@ public class TemplateVariablesTable extends JBTable {
         final int selectedRow = getSelectedRow();
         final Pair<String, String> pair = curTemplateVariables.get(selectedRow);
         final String title = ApplicationBundle.message("title.edit.variable");
-        final String macroName = pair.getFirst();
-        final TemplateVariableEditor macroEditor = new TemplateVariableEditor(title, macroName, pair.getSecond(), new EditValidator());
-        macroEditor.show();
-        if (macroEditor.isOK()) {
+        final String variableName = pair.getFirst();
+        final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, variableName, pair.getSecond(), new EditValidator(variableName));
+        variableEditor.show();
+        if (variableEditor.isOK()) {
             curTemplateVariables.remove(selectedRow);
-            curTemplateVariables.add(Pair.create(macroEditor.getName(), macroEditor.getValue()));
+            curTemplateVariables.add(Pair.create(variableEditor.getName(), variableEditor.getValue()));
             Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
             tableModel.fireTableDataChanged();
         }
     }
 
     public boolean isModified() {
-        final ArrayList<Pair<String, String>> macros = new ArrayList<Pair<String, String>>();
-        obtainVariablesPairs(macros);
-        return !macros.equals(curTemplateVariables);
+        final ArrayList<Pair<String, String>> variables = new ArrayList<Pair<String, String>>();
+        obtainVariablesPairs(variables);
+        return !variables.equals(curTemplateVariables);
     }
 
     private class TemplateVariableTableModel extends AbstractTableModel{
@@ -228,36 +223,76 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     private class AddValidator implements TemplateVariableEditor.Validator {
-        private final String myTitle;
 
-        public AddValidator(String title) {
-            myTitle = title;
+        private String errorMessage;
+
+        public AddValidator() {
+            errorMessage = "";
         }
 
         public boolean checkName(String name) {
-            return name.length() != 0 && name.toUpperCase().equals(name);
+            if (name.length() == 0) {
+                errorMessage = "Name is empty";
+                return false;
+            }
+            if (!name.toUpperCase().equals(name)) {
+                errorMessage = "Name should be UPPER case";
+                return false;
+            }
+            return true;
         }
 
         public boolean isOK(String name, String value) {
             if(!checkName(name)) return false;
             if (hasVariableWithName(name)) {
-                Messages.showErrorDialog(TemplateVariablesTable.this,
-                        ApplicationBundle.message("error.variable.already.exists", name), myTitle);
+                errorMessage = ApplicationBundle.message("error.variable.already.exists", name);
                 return false;
             }
             return true;
         }
+
+        @Override
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
     }
 
     private class EditValidator implements TemplateVariableEditor.Validator {
+
+        private String errorMessage;
+        private String originalName;
+
+        private EditValidator(String originalName) {
+            this.errorMessage = "";
+            this.originalName = originalName;
+        }
+
         public boolean checkName(String name) {
-            return name.length() != 0 && name.toUpperCase().equals(name) &&
-                   !PerProjectTemplateManager.getInstance(TemplateVariablesTable.this.project).getProjectVariables().contains(name);
+            if (name.length() == 0) {
+                errorMessage = "Name is empty";
+                return false;
+            }
+            if (!name.toUpperCase().equals(name)) {
+                errorMessage = "Name should be UPPER case";
+                return false;
+            }
+            if (!originalName.equals(name) && hasVariableWithName(name)) {
+                errorMessage = ApplicationBundle.message("error.variable.already.exists", name);
+                return false;
+            }
+            return true;
+
 
         }
 
         public boolean isOK(String name, String value) {
             return checkName(name);
+        }
+
+        @Override
+        public String getErrorMessage() {
+            return errorMessage;
         }
     }
 }

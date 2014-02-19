@@ -9,6 +9,16 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
+          <b>0.3</b> @ 19.02.2014:
+          <ul>
+            <li>New UI validation behavior:
+                <ul>
+                   <li>Name should be in UPPER case</li>
+                   <li>During rename variable new name should not be exists</li>
+                </ul>
+            </li>
+            <li>Small refactoring of the code</li>
+          </ul>
           <b>0.2</b> @ 19.02.2014:
           <ul>
              <li>Fix: <a href="https://github.com/vkravets/FileTemplatesVariable/issues/1">issue with saving and loading Default Project's Settings</a></li>
