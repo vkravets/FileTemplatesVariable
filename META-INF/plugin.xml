@@ -9,7 +9,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
-          * 0.2 @ 18.02.2014:
+          * 0.2 @ 19.02.2014:
+             - Fix issue with saving and loading Default Project's Settings
              - Change "Template Variables" in the Project Settings to "File and Code Template Variable"
                Thanks to Anonymous on the plugins.jetbrains.com =)
           * 0.1 @ 17.02.2014:
