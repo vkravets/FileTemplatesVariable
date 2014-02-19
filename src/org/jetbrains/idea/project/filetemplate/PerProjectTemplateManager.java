@@ -2,6 +2,7 @@ package org.jetbrains.idea.project.filetemplate;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.impl.DefaultProject;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.text.UniqueNameGenerator;
@@ -58,12 +59,20 @@ public class PerProjectTemplateManager extends AbstractProjectComponent implemen
         projectVariables.clear();
         List<Element> elements = JDOMUtil.getChildren(element, TEMPLATE_VARIABLES);
         if (elements.size() > 0) {
-            elements = JDOMUtil.getChildren(elements.get(0), VARIABLE_TAG);
-            for (Element variable : elements) {
-                Attribute attribute = variable.getAttribute(VARIABLE_NAME_ATTR);
-                if (attribute != null && attribute.getValue() != null) {
-                    projectVariables.put(attribute.getValue(), variable.getValue());
-                }
+            updateVariablesFromElement(elements.get(0));
+        } else {
+            // Workaround for DefaultProject storage behavior
+            // it's save information without root element, in our case without TEMPLATE_VARIABLES tag
+            updateVariablesFromElement(element);
+        }
+    }
+
+    private void updateVariablesFromElement(Element element) {
+        List<Element> elements = JDOMUtil.getChildren(element, VARIABLE_TAG);
+        for (Element variable : elements) {
+            Attribute attribute = variable.getAttribute(VARIABLE_NAME_ATTR);
+            if (attribute != null && attribute.getValue() != null) {
+                projectVariables.put(attribute.getValue(), variable.getValue());
             }
         }
     }
