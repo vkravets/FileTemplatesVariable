@@ -1,18 +1,19 @@
 package org.jetbrains.idea.project.filetemplate;
 
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.impl.DefaultProject;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.text.UniqueNameGenerator;
+import org.apache.velocity.runtime.parser.ParseException;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -127,5 +128,30 @@ public class PerProjectTemplateManager extends AbstractProjectComponent implemen
 
     public Properties getProjectVariables() {
         return projectVariables;
+    }
+
+    public Set<String> getAllFileTemplatesVariables() {
+        Set<String> result = new TreeSet<String>();
+        List<FileTemplate> allTemplates = new ArrayList<FileTemplate>();
+        FileTemplateManager fileTemplateManager = FileTemplateManager.getInstance();
+        FileTemplate[] templates = fileTemplateManager.getAllTemplates();
+        FileTemplate[] patterns = fileTemplateManager.getAllPatterns();
+        FileTemplate[] codeTemplates = fileTemplateManager.getAllCodeTemplates();
+        FileTemplate[] j2eeTemplates = fileTemplateManager.getAllJ2eeTemplates();
+        allTemplates.addAll(Arrays.asList(templates));
+        allTemplates.addAll(Arrays.asList(codeTemplates));
+        allTemplates.addAll(Arrays.asList(j2eeTemplates));
+        allTemplates.addAll(Arrays.asList(patterns));
+
+        for (FileTemplate template : allTemplates) {
+            try {
+                String[] variables = FileTemplateUtil.calculateAttributes(template.getText(), new Properties(), true);
+                result.addAll(Arrays.asList(variables));
+            } catch (ParseException e) {
+                // todo logger
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 }

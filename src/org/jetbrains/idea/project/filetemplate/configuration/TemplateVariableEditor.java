@@ -15,17 +15,23 @@
  */
 package org.jetbrains.idea.project.filetemplate.configuration;
 
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.DocumentAdapter;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,7 +46,7 @@ import java.io.IOException;
  * @see com.intellij.application.options.pathMacros.PathMacroEditor
  */
 public class TemplateVariableEditor extends DialogWrapper {
-    private JTextField myNameField;
+    private ComboBox myNameField;
     private JPanel myPanel;
     private JTextField myValueField;
     private final Validator myValidator;
@@ -55,7 +61,19 @@ public class TemplateVariableEditor extends DialogWrapper {
         super(true);
         setTitle(title);
         myValidator = validator;
-        myNameField.setText(variableName);
+        AutoCompleteDecorator.decorate(myNameField);
+        myNameField.setSelectedItem(variableName);
+        myNameField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ValidationInfo validationInfo = doValidate();
+                if (validationInfo != null) {
+                    setErrorText(validationInfo.message);
+                } else {
+                    setErrorText(null);
+                }
+            }
+        });
         DocumentListener documentListener = new DocumentAdapter() {
             public void textChanged(DocumentEvent event) {
                 ValidationInfo validationInfo = doValidate();
@@ -66,10 +84,17 @@ public class TemplateVariableEditor extends DialogWrapper {
                 }
             }
         };
-        myNameField.getDocument().addDocumentListener(documentListener);
+        JTextComponent editorComponent = (JTextComponent)myNameField.getEditor().getEditorComponent();
+        editorComponent.getDocument().addDocumentListener(documentListener);
         myValueField.getDocument().addDocumentListener(documentListener);
         myValueField.setText(value);
         init();
+    }
+
+    public void setDefaultVariables(Set<String> defaultVariables) {
+        for (String name : defaultVariables) {
+            myNameField.addItem(name);
+        }
     }
 
     public void setMacroNameEditable(boolean isEditable) {
@@ -98,7 +123,7 @@ public class TemplateVariableEditor extends DialogWrapper {
     }
 
     public String getName() {
-        return myNameField.getText().trim();
+        return ((String)myNameField.getSelectedItem()).trim();
     }
 
     public String getValue() {

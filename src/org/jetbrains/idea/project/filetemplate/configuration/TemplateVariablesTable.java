@@ -73,6 +73,7 @@ public class TemplateVariablesTable extends JBTable {
     public void addVariable() {
         final String title = ApplicationBundle.message("title.add.variable");
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, "", "", new AddValidator());
+        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
         variableEditor.show();
         if (variableEditor.isOK()) {
             final String name = variableEditor.getName();
@@ -169,6 +170,7 @@ public class TemplateVariablesTable extends JBTable {
         final String title = ApplicationBundle.message("title.edit.variable");
         final String variableName = pair.getFirst();
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, variableName, pair.getSecond(), new EditValidator(variableName));
+        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
         variableEditor.show();
         if (variableEditor.isOK()) {
             curTemplateVariables.remove(selectedRow);
@@ -235,10 +237,6 @@ public class TemplateVariablesTable extends JBTable {
                 errorMessage = "Name is empty";
                 return false;
             }
-            if (!name.toUpperCase().equals(name)) {
-                errorMessage = "Name should be UPPER case";
-                return false;
-            }
             return true;
         }
 
@@ -271,10 +269,6 @@ public class TemplateVariablesTable extends JBTable {
         public boolean checkName(String name) {
             if (name.length() == 0) {
                 errorMessage = "Name is empty";
-                return false;
-            }
-            if (!name.toUpperCase().equals(name)) {
-                errorMessage = "Name should be UPPER case";
                 return false;
             }
             if (!originalName.equals(name) && hasVariableWithName(name)) {
