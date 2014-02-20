@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
-  <version>0.3</version>
+  <version>0.4</version>
   <vendor email="vova.kravets@gmail.com" url="http://github.com/vkravets/FileTemplateVariable"/>
 
   <description><![CDATA[
@@ -9,6 +9,13 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
+          <b>0.4</b> @ 20.02.2014
+          <ul>
+             <li>Change text field of variable's name to editable combobox with autocomplete.</li>
+             <li>Read all possible variables from all file templates via FileTemplateManager (need to check compatible with products based on IDEA platform)</li>
+             <li>Set all possible variables to combobox's list</li>
+             <li>Remove UPPER case validation, since we can define non UPPER case variable in the templates.</li>
+          </ul>
           <b>0.3</b> @ 19.02.2014:
           <ul>
             <li>New UI validation behavior:
