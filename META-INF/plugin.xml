@@ -13,7 +13,7 @@
           <ul>
              <li>Change text field of variable's name to editable combobox with autocomplete.</li>
              <li>Read all possible variables from all file templates via FileTemplateManager (need to check compatible with products based on IDEA platform)</li>
-             <li>Set all possible variables to combobox's list</li>
+             <li>Set all possible variables to combobox's list in alphabetic order</li>
              <li>Remove UPPER case validation, since we can define non UPPER case variable in the templates.</li>
           </ul>
           <b>0.3</b> @ 19.02.2014:
