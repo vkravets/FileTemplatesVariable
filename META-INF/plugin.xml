@@ -9,10 +9,10 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
-          <b>0.4</b> @ 20.02.2014
+          <b>0.4</b> @ 21.02.2014
           <ul>
-             <li>Change text field of variable's name to editable combobox with autocomplete.</li>
-             <li>Read all possible variables from all file templates via FileTemplateManager (need to check compatible with products based on IDEA platform)</li>
+             <li>Change text field of variable's name to editable combobox with autocomplete</li>
+             <li>Read all possible variables from all file templates via FileTemplateManager (compatible with all IDEA platform's products)</li>
              <li>Set all possible variables to combobox's list in alphabetic order</li>
              <li>Remove UPPER case validation, since we can define non UPPER case variable in the templates.</li>
           </ul>
