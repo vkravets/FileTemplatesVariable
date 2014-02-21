@@ -62,6 +62,7 @@ public class TemplateVariableEditor extends DialogWrapper {
         setTitle(title);
         myValidator = validator;
         AutoCompleteDecorator.decorate(myNameField);
+        myNameField.setMinimumAndPreferredWidth(20);
         myNameField.setSelectedItem(variableName);
         myNameField.addActionListener(new ActionListener() {
             @Override
@@ -95,10 +96,6 @@ public class TemplateVariableEditor extends DialogWrapper {
         for (String name : defaultVariables) {
             myNameField.addItem(name);
         }
-    }
-
-    public void setMacroNameEditable(boolean isEditable) {
-        myNameField.setEditable(isEditable);
     }
 
     public JComponent getPreferredFocusedComponent() {
