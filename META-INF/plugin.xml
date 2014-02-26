@@ -12,6 +12,7 @@
           <b>0.4.1</b> @ 26.02.2014
           <ul>
              <li>Fix: <a href="https://github.com/vkravets/FileTemplatesVariable/issues/2">#2 NullPointerException when adding a variable</a></li>
+             <li>Fix: Exception appeared in the IDEA log, when calculate variables from templates</li>
           </ul>
           <b>0.4</b> @ 21.02.2014
           <ul>
