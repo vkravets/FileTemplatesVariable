@@ -233,7 +233,7 @@ public class TemplateVariablesTable extends JBTable {
         }
 
         public boolean checkName(String name) {
-            if (name.length() == 0) {
+            if (name == null || name.length() == 0) {
                 errorMessage = "Name is empty";
                 return false;
             }
@@ -267,7 +267,7 @@ public class TemplateVariablesTable extends JBTable {
         }
 
         public boolean checkName(String name) {
-            if (name.length() == 0) {
+            if (name == null || name.length() == 0) {
                 errorMessage = "Name is empty";
                 return false;
             }

@@ -41,7 +41,7 @@ import java.util.Set;
  * Time: 7:50 PM
  * <p/>
  * Based on: com.intellij.application.options.pathMacros.PathMacroEditor
- *           author: dsl
+ * author: dsl
  *
  * @see com.intellij.application.options.pathMacros.PathMacroEditor
  */
@@ -53,7 +53,9 @@ public class TemplateVariableEditor extends DialogWrapper {
 
     public interface Validator {
         boolean checkName(String name);
+
         boolean isOK(String name, String value);
+
         String getErrorMessage();
     }
 
@@ -85,7 +87,7 @@ public class TemplateVariableEditor extends DialogWrapper {
                 }
             }
         };
-        JTextComponent editorComponent = (JTextComponent)myNameField.getEditor().getEditorComponent();
+        JTextComponent editorComponent = (JTextComponent) myNameField.getEditor().getEditorComponent();
         editorComponent.getDocument().addDocumentListener(documentListener);
         myValueField.getDocument().addDocumentListener(documentListener);
         myValueField.setText(value);
@@ -120,7 +122,11 @@ public class TemplateVariableEditor extends DialogWrapper {
     }
 
     public String getName() {
-        return ((String)myNameField.getSelectedItem()).trim();
+        String selectedItem = (String) myNameField.getSelectedItem();
+        if (selectedItem != null) {
+            return selectedItem.trim();
+        }
+        return null;
     }
 
     public String getValue() {
