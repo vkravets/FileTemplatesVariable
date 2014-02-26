@@ -4,6 +4,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
@@ -32,6 +33,7 @@ import java.util.*;
 public class PerProjectTemplateManager extends AbstractProjectComponent implements PersistentStateComponent<Element> {
 
     private Properties projectVariables;
+    private static final Logger logger = Logger.getInstance("#org.jetbrains.idea.project.filetemplate.PerProjectTempateManager");
 
     protected PerProjectTemplateManager(Project project) {
         super(project);
@@ -148,8 +150,7 @@ public class PerProjectTemplateManager extends AbstractProjectComponent implemen
                 String[] variables = FileTemplateUtil.calculateAttributes(template.getText(), new Properties(), true);
                 result.addAll(Arrays.asList(variables));
             } catch (ParseException e) {
-                // todo logger
-                e.printStackTrace();
+                logger.warn("Parsing exception", e);
             }
         }
         return result;
