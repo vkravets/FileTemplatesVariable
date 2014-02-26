@@ -29,8 +29,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -130,15 +128,8 @@ public class TemplateVariableEditor extends DialogWrapper {
     }
 
     public String getValue() {
-        String path = myValueField.getText().trim();
-        File file = new File(path);
-        if (file.isAbsolute()) {
-            try {
-                return file.getCanonicalPath();
-            } catch (IOException ignored) {
-            }
-        }
-        return path;
+        String text = myValueField.getText();
+        return text == null ? "" : text.trim();
     }
 
     protected JComponent createNorthPanel() {

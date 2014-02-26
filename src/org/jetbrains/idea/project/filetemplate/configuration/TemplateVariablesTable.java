@@ -67,7 +67,7 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     public String getVariableNameAt(int row) {
-        return (String)getValueAt(row, NAME_COLUMN);
+        return (String) getValueAt(row, NAME_COLUMN);
     }
 
     public void addVariable() {
