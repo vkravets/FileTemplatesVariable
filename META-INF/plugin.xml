@@ -2,7 +2,7 @@
   <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
   <version>0.4.1</version>
-  <vendor email="vova.kravets@gmail.com" url="http://github.com/vkravets/FileTemplateVariable"/>
+  <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
 
   <description><![CDATA[
       This plugins allow to specify or override any variables in the File Template functionality per Project<br>
