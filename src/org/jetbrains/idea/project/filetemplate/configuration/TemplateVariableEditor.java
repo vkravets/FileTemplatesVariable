@@ -15,18 +15,19 @@
  */
 package org.jetbrains.idea.project.filetemplate.configuration;
 
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.DocumentAdapter;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.idea.project.filetemplate.AutoCompletion;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Set;
@@ -44,7 +45,7 @@ import java.util.Set;
  * @see com.intellij.application.options.pathMacros.PathMacroEditor
  */
 public class TemplateVariableEditor extends DialogWrapper {
-    private ComboBox myNameField;
+    private JComboBox<String> myNameField;
     private JPanel myPanel;
     private JTextField myValueField;
     private final Validator myValidator;
@@ -61,8 +62,11 @@ public class TemplateVariableEditor extends DialogWrapper {
         super(true);
         setTitle(title);
         myValidator = validator;
-        AutoCompleteDecorator.decorate(myNameField);
-        myNameField.setMinimumAndPreferredWidth(20);
+//        AutoCompleteDecorator.decorate(myNameField);
+        AutoCompletion.enable(myNameField, false);
+//        myNameField.setMinimumAndPreferredWidth(20);
+        Dimension preferredSize = myNameField.getPreferredSize();
+        myNameField.setPreferredSize(new Dimension(20, UIUtil.fixComboBoxHeight(preferredSize.height)));
         myNameField.setSelectedItem(variableName);
         myNameField.addActionListener(new ActionListener() {
             @Override
