@@ -45,7 +45,7 @@ import java.util.Set;
  * @see com.intellij.application.options.pathMacros.PathMacroEditor
  */
 public class TemplateVariableEditor extends DialogWrapper {
-    private JComboBox<String> myNameField;
+    private JComboBox myNameField;
     private JPanel myPanel;
     private JTextField myValueField;
     private final Validator myValidator;
