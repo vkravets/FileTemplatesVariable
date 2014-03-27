@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
-  <version>0.4.2</version>
+  <version>0.4.3</version>
   <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
 
   <description><![CDATA[
@@ -9,6 +9,10 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
+          <b>0.4.3</b> @ --
+          <ul>
+             <li></li>
+          </ul>
           <b>0.4.2</b> @ 27.03.2014
           <ul>
              <li>Fix: <a href="https://github.com/vkravets/FileTemplatesVariable/issues/5">#5 Autocomplete overrides the case of manually entered Variable name</a></li>
