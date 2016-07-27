@@ -147,7 +147,7 @@ public class PerProjectTemplateManager extends AbstractProjectComponent implemen
 
         for (FileTemplate template : allTemplates) {
             try {
-                String[] variables = FileTemplateUtil.calculateAttributes(template.getText(), new Properties(), true);
+                String[] variables = FileTemplateUtil.calculateAttributes(template.getText(), new Properties(), true, project);
                 result.addAll(Arrays.asList(variables));
             } catch (ParseException e) {
                 logger.warn("Parsing exception", e);
