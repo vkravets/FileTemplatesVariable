@@ -9,9 +9,9 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
-          <b>0.4.3</b> @ --
+          <b>0.4.3</b> @ 11.04.1017
           <ul>
-             <li></li>
+             <li>Merge fix from @JDGrimes to have compatible with version >= 131.0 <a href="https://github.com/vkravets/FileTemplatesVariable/pull/15">#15 Pass all required args to function</a></li>
           </ul>
           <b>0.4.2</b> @ 27.03.2014
           <ul>
@@ -52,7 +52,7 @@
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="93.13"/>
+  <idea-version since-build="131"/>
 
   <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->
