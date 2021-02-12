@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>org.vkravets.idea.project.template.variables</id>
+  <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
   <version>0.5.0</version>
   <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
@@ -64,11 +64,15 @@
   <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-      <defaultTemplatePropertiesProvider implementation="org.vkravets.idea.project.filetemplate.ProjectTemplatePropertiesProvider"/>
-      <projectConfigurable instance="org.vkravets.idea.project.filetemplate.configuration.ProjectTemplateVariableConfigurable"/>
-      <project.converterProvider id="project-template-variables"
-              implementation="org.vkravets.idea.project.filetemplate.configuration.ProjectVariableConfigurationMigration"/>
-      <projectService serviceImplementation="org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager"/>
+      <defaultTemplatePropertiesProvider
+              implementation="org.vkravets.idea.project.filetemplate.ProjectTemplatePropertiesProvider"/>
+      <projectConfigurable
+              instance="org.vkravets.idea.project.filetemplate.configuration.ProjectTemplateVariableConfigurable"/>
+<!--      <project.converterProvider-->
+<!--              id="project-template-variables"-->
+<!--              implementation="org.vkravets.idea.project.filetemplate.configuration.ProjectVariableConfigurationMigration"/>-->
+      <projectService
+              serviceImplementation="org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager"/>
   </extensions>
 
 </idea-plugin>

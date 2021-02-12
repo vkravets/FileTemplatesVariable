@@ -6,6 +6,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
 import org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager;
+import org.vkravets.idea.project.filetemplate.TemplateVariable;
+import org.vkravets.idea.project.filetemplate.VariablesConfigurationState;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -14,6 +16,8 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -113,12 +117,15 @@ public class TemplateVariablesTable extends JBTable {
     public void commit() {
         final ProjectTemplateVariableManager perProjectTemplateVariableManager =
                 project.getService(ProjectTemplateVariableManager.class);
-        Map<String, String> projectVariables = perProjectTemplateVariableManager.getProjectVariables();
-        projectVariables.clear();
+        VariablesConfigurationState projectVariables = perProjectTemplateVariableManager.getProjectVariables();
+        projectVariables.getTemplateVariables().clear();
         for (Pair<String, String> pair : curTemplateVariables) {
             final String value = pair.getSecond();
             if (value != null && value.trim().length() > 0) {
-                projectVariables.put(pair.getFirst(), value);
+                TemplateVariable variable = new TemplateVariable();
+                variable.name = pair.getFirst();
+                variable.value = value;
+                projectVariables.getTemplateVariables().add(variable);
             }
         }
     }
@@ -154,13 +161,17 @@ public class TemplateVariablesTable extends JBTable {
     private void obtainVariablesPairs(final List<Pair<String, String>> macros) {
         ProjectTemplateVariableManager projectTemplateManager = project.getService(ProjectTemplateVariableManager.class);
         macros.clear();
-        Map<String, String> projectVariables = projectTemplateManager.getProjectVariables();
+        VariablesConfigurationState projectVariablesState = projectTemplateManager.getProjectVariables();
+        final Map<String, String> projectVariables = projectVariablesState.getTemplateVariables()
+                                                            .stream()
+                                                            .collect(toMap(TemplateVariable::getName,
+                                                                           TemplateVariable::getValue));
         final Set<String> macroNames = projectVariables.keySet();
         for (String name : macroNames) {
             macros.add(Pair.create(name, projectVariables.get(name)));
         }
 
-        Collections.sort(macros, VARIABLES_COMPARATOR);
+        macros.sort(VARIABLES_COMPARATOR);
     }
 
     public void editVariable() {
@@ -178,7 +189,7 @@ public class TemplateVariablesTable extends JBTable {
         if (variableEditor.isOK()) {
             curTemplateVariables.remove(selectedRow);
             curTemplateVariables.add(Pair.create(variableEditor.getName(), variableEditor.getValue()));
-            Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
+            curTemplateVariables.sort(VARIABLES_COMPARATOR);
             tableModel.fireTableDataChanged();
         }
     }

@@ -7,6 +7,8 @@ import com.intellij.psi.PsiDirectory;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Created by IntelliJ IDEA.
  * Author: Vladimir Kravets
@@ -20,7 +22,11 @@ public class ProjectTemplatePropertiesProvider implements DefaultTemplatePropert
         final Project project = psiDirectory.getProject();
         final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
 
-        Map<String, String> projectVariables = manager.getProjectVariables();
-        properties.putAll(projectVariables);
+        final VariablesConfigurationState projectVariables = manager.getProjectVariables();
+        final Map<String, String> variablesMap = projectVariables.getTemplateVariables()
+                                                                 .stream()
+                                                                 .collect(toMap(TemplateVariable::getName,
+                                                                                TemplateVariable::getValue));
+        properties.putAll(variablesMap);
     }
 }

@@ -6,17 +6,7 @@ import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.text.UniqueNameGenerator;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Text;
-import com.intellij.util.xmlb.annotations.XCollection;
-import com.intellij.util.xmlb.annotations.XMap;
 import org.apache.velocity.runtime.parser.ParseException;
-import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -34,41 +24,28 @@ import static java.util.stream.Collectors.toMap;
                 @Storage(value = "template/template_variables.xml")
         }
       )
-public class ProjectTemplateVariableManager implements PersistentStateComponent<ProjectTemplateVariableManager> {
+public class ProjectTemplateVariableManager implements PersistentStateComponent<VariablesConfigurationState> {
 
-    @XMap(propertyElementName = TEMPLATE_VARIABLES,
-          entryTagName = "variable",
-          keyAttributeName = "name")
-    public Map<String, String> projectVariables = new HashMap<>();
+    public VariablesConfigurationState state;
 
     private static final Logger logger = Logger.getInstance("#org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager");
 
     protected ProjectTemplateVariableManager() {
     }
 
-    private static final String TEMPLATE_VARIABLES = "templateVariables";
-
     @Nullable
     @Override
-    public ProjectTemplateVariableManager getState() {
-        return this;
+    public VariablesConfigurationState getState() {
+        return this.state;
     }
 
     @Override
-    public void loadState(ProjectTemplateVariableManager element) {
-        XmlSerializerUtil.copyBean(element, this);
+    public void loadState(VariablesConfigurationState element) {
+        this.state = element;
     }
 
-    public static ProjectTemplateVariableManager transform(LegacyConfiguration configuration) {
-        final ProjectTemplateVariableManager manager = new ProjectTemplateVariableManager();
-        manager.projectVariables =
-                Arrays.stream(configuration.templateVariables)
-                      .collect(toMap(TemplateVariable::getName, TemplateVariable::getValue));
-        return manager;
-    }
-
-    public Map<String, String> getProjectVariables() {
-        return projectVariables;
+    public VariablesConfigurationState getProjectVariables() {
+        return this.state;
     }
 
     public Set<String> getAllFileTemplatesVariables(Project project) {
@@ -97,37 +74,5 @@ public class ProjectTemplateVariableManager implements PersistentStateComponent<
             }
         }
         return result;
-    }
-
-    @Tag("templateVariables")
-    public static class LegacyConfiguration {
-
-        @XCollection(propertyElementName = "templateVariables",
-                     elementName = "variable",
-                     valueAttributeName = "",
-                     elementTypes = TemplateVariable.class)
-        public TemplateVariable[] templateVariables;
-
-        public LegacyConfiguration() {
-
-        }
-    }
-
-    @Tag("variable")
-    static class TemplateVariable {
-
-        @Attribute("name")
-        public String name;
-
-        @Text
-        public String value;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 }
