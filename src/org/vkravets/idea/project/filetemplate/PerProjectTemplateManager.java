@@ -1,4 +1,4 @@
-package org.jetbrains.idea.project.filetemplate;
+package org.vkravets.idea.project.filetemplate;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;

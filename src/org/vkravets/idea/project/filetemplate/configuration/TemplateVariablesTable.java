@@ -1,11 +1,11 @@
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.idea.project.filetemplate.PerProjectTemplateManager;
+import org.vkravets.idea.project.filetemplate.PerProjectTemplateManager;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

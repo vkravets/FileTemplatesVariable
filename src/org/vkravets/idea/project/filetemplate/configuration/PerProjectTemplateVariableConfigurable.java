@@ -1,4 +1,4 @@
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
