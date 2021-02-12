@@ -1,7 +1,7 @@
-<idea-plugin version="2">
-  <id>org.jetbrains.idea.project.template.variables</id>
+<idea-plugin>
+  <id>org.vkravets.idea.project.template.variables</id>
   <name>File Template Variables</name>
-  <version>0.4.3</version>
+  <version>0.4.4</version>
   <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
 
   <description><![CDATA[
@@ -9,7 +9,11 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
-          <b>0.4.3</b> @ 11.04.1017
+          <b>0.4.4</b> @ 12.02.2021
+          <ul>
+             <li>Fixed plugin id because of duplicate in Jetbrains platform</li>
+          </ul>
+          <b>0.4.3</b> @ 11.04.2017
           <ul>
              <li>Merge fix from @JDGrimes to have compatible with version >= 131.0 <a href="https://github.com/vkravets/FileTemplatesVariable/pull/15">#15 Pass all required args to function</a></li>
           </ul>
