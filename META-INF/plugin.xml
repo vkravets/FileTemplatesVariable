@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
-  <version>0.4.5</version>
+  <version>0.5.0</version>
   <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
 
   <description><![CDATA[
@@ -9,6 +9,10 @@
     ]]></description>
 
   <change-notes><![CDATA[<html>
+          <b>0.5.0</b> @ 13.02.2021
+          <ul>
+            <li>Align to latest version of Jetbrains Platform, drop some old version of it</li>
+          </ul>
           <b>0.4.4</b> @ 12.02.2021
           <ul>
              <li>Fixed plugin id because of duplicate in Jetbrains platform</li>
