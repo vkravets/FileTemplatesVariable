@@ -1,4 +1,4 @@
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;

@@ -1,4 +1,4 @@
-package org.jetbrains.idea.project.filetemplate;
+package org.vkravets.idea.project.filetemplate;
 
 /**
  * Created by IntelliJ IDEA.

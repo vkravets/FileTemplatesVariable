@@ -1,4 +1,4 @@
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -15,12 +15,12 @@ import javax.swing.*;
  * Date: 2/14/14
  * Time: 7:38 PM
  */
-public class PerProjectTemplateVariableConfigurable implements Configurable.NoScroll, Configurable {
+public class ProjectTemplateVariableConfigurable implements Configurable.NoScroll, Configurable {
 
     private Project project;
     private TemplateVariablesConfigurationPanel panel;
 
-    public PerProjectTemplateVariableConfigurable(Project project) {
+    public ProjectTemplateVariableConfigurable(Project project) {
         this.project = project;
     }
 

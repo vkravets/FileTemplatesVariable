@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -21,7 +21,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.project.filetemplate.AutoCompletion;
+import org.vkravets.idea.project.filetemplate.AutoCompletion;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

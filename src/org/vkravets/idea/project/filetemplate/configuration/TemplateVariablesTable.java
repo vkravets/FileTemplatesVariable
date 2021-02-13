@@ -1,11 +1,11 @@
-package org.jetbrains.idea.project.filetemplate.configuration;
+package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
-import org.jetbrains.idea.project.filetemplate.PerProjectTemplateManager;
+import org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -73,7 +73,8 @@ public class TemplateVariablesTable extends JBTable {
     public void addVariable() {
         final String title = ApplicationBundle.message("title.add.variable");
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, "", "", new AddValidator());
-        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
+        final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
+        variableEditor.setDefaultVariables(manager.getAllFileTemplatesVariables(project));
         variableEditor.show();
         if (variableEditor.isOK()) {
             final String name = variableEditor.getName();
@@ -110,13 +111,14 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     public void commit() {
-        PerProjectTemplateManager perProjectTemplateManager = PerProjectTemplateManager.getInstance(project);
-        Properties projectVariables = perProjectTemplateManager.getProjectVariables();
+        final ProjectTemplateVariableManager perProjectTemplateVariableManager =
+                project.getService(ProjectTemplateVariableManager.class);
+        Map<String, String> projectVariables = perProjectTemplateVariableManager.getProjectVariables();
         projectVariables.clear();
         for (Pair<String, String> pair : curTemplateVariables) {
             final String value = pair.getSecond();
             if (value != null && value.trim().length() > 0) {
-                projectVariables.setProperty(pair.getFirst(), value);
+                projectVariables.put(pair.getFirst(), value);
             }
         }
     }
@@ -150,12 +152,12 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     private void obtainVariablesPairs(final List<Pair<String, String>> macros) {
-        PerProjectTemplateManager projectTemplateManager = PerProjectTemplateManager.getInstance(project);
+        ProjectTemplateVariableManager projectTemplateManager = project.getService(ProjectTemplateVariableManager.class);
         macros.clear();
-        Properties projectVariables = projectTemplateManager.getProjectVariables();
-        final Set<String> macroNames = projectVariables.stringPropertyNames();
+        Map<String, String> projectVariables = projectTemplateManager.getProjectVariables();
+        final Set<String> macroNames = projectVariables.keySet();
         for (String name : macroNames) {
-            macros.add(Pair.create(name, projectVariables.getProperty(name)));
+            macros.add(Pair.create(name, projectVariables.get(name)));
         }
 
         Collections.sort(macros, VARIABLES_COMPARATOR);
@@ -170,7 +172,8 @@ public class TemplateVariablesTable extends JBTable {
         final String title = ApplicationBundle.message("title.edit.variable");
         final String variableName = pair.getFirst();
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, variableName, pair.getSecond(), new EditValidator(variableName));
-        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
+        final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
+        variableEditor.setDefaultVariables(manager.getAllFileTemplatesVariables(project));
         variableEditor.show();
         if (variableEditor.isOK()) {
             curTemplateVariables.remove(selectedRow);
