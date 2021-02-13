@@ -55,28 +55,17 @@
     </html>]]>
   </change-notes>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="131"/>
+  <idea-version since-build="193.5233.102"/>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products -->
-  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-      <defaultTemplatePropertiesProvider implementation="org.vkravets.idea.project.filetemplate.PerProjectTemplatePropertiesProvider"/>
-      <projectConfigurable instance="org.vkravets.idea.project.filetemplate.configuration.PerProjectTemplateVariableConfigurable"/>
+      <defaultTemplatePropertiesProvider
+              implementation="org.vkravets.idea.project.filetemplate.ProjectTemplatePropertiesProvider"/>
+      <projectConfigurable
+              instance="org.vkravets.idea.project.filetemplate.configuration.ProjectTemplateVariableConfigurable"/>
+      <projectService
+              serviceImplementation="org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager"/>
   </extensions>
-
-  <application-components/>
-
-  <project-components>
-      <component>
-          <implementation-class>org.vkravets.idea.project.filetemplate.PerProjectTemplateManager</implementation-class>
-          <loadForDefaultProject/>
-      </component>
-  </project-components>
-
-  <actions/>
 
 </idea-plugin>

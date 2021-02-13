@@ -18,7 +18,6 @@ package org.vkravets.idea.project.filetemplate.configuration;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.vkravets.idea.project.filetemplate.AutoCompletion;
@@ -28,8 +27,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Set;
 
 /**
@@ -66,17 +63,14 @@ public class TemplateVariableEditor extends DialogWrapper {
         AutoCompletion.enable(myNameField, false);
 //        myNameField.setMinimumAndPreferredWidth(20);
         Dimension preferredSize = myNameField.getPreferredSize();
-        myNameField.setPreferredSize(new Dimension(20, UIUtil.fixComboBoxHeight(preferredSize.height)));
+        myNameField.setPreferredSize(new Dimension(20, preferredSize.height));
         myNameField.setSelectedItem(variableName);
-        myNameField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ValidationInfo validationInfo = doValidate();
-                if (validationInfo != null) {
-                    setErrorText(validationInfo.message);
-                } else {
-                    setErrorText(null);
-                }
+        myNameField.addActionListener(e -> {
+            ValidationInfo validationInfo = doValidate();
+            if (validationInfo != null) {
+                setErrorText(validationInfo.message);
+            } else {
+                setErrorText(null);
             }
         });
         DocumentListener documentListener = new DocumentAdapter() {

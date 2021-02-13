@@ -5,7 +5,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.table.JBTable;
-import org.vkravets.idea.project.filetemplate.PerProjectTemplateManager;
+import org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager;
+import org.vkravets.idea.project.filetemplate.TemplateVariable;
+import org.vkravets.idea.project.filetemplate.VariablesConfigurationState;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -14,6 +16,8 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,12 +37,8 @@ public class TemplateVariablesTable extends JBTable {
     private static final int NAME_COLUMN = 0;
     private static final int VALUE_COLUMN = 1;
 
-    private final List<Pair<String, String>> curTemplateVariables = new ArrayList<Pair<String, String>>();
-    private static final Comparator<Pair<String, String>> VARIABLES_COMPARATOR = new Comparator<Pair<String, String>>() {
-        public int compare(Pair<String, String> pair, Pair<String, String> pair1) {
-            return pair.getFirst().compareTo(pair1.getFirst());
-        }
-    };
+    private final List<Pair<String, String>> curTemplateVariables = new ArrayList<>();
+    private static final Comparator<Pair<String, String>> VARIABLES_COMPARATOR = Comparator.comparing(pair -> pair.getFirst());
 
     private final Project project;
 
@@ -73,12 +73,13 @@ public class TemplateVariablesTable extends JBTable {
     public void addVariable() {
         final String title = ApplicationBundle.message("title.add.variable");
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, "", "", new AddValidator());
-        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
+        final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
+        variableEditor.setDefaultVariables(manager.getAllFileTemplatesVariables(project));
         variableEditor.show();
         if (variableEditor.isOK()) {
             final String name = variableEditor.getName();
-            curTemplateVariables.add(new Pair<String, String>(name, variableEditor.getValue()));
-            Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
+            curTemplateVariables.add(new Pair<>(name, variableEditor.getValue()));
+            curTemplateVariables.sort(VARIABLES_COMPARATOR);
             final int index = indexOfVariableWithName(name);
             tableModel.fireTableDataChanged();
             setRowSelectionInterval(index, index);
@@ -110,13 +111,15 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     public void commit() {
-        PerProjectTemplateManager perProjectTemplateManager = PerProjectTemplateManager.getInstance(project);
-        Properties projectVariables = perProjectTemplateManager.getProjectVariables();
-        projectVariables.clear();
+        final ProjectTemplateVariableManager perProjectTemplateVariableManager =
+                project.getService(ProjectTemplateVariableManager.class);
+        VariablesConfigurationState projectVariables = perProjectTemplateVariableManager.getProjectVariables();
+        projectVariables.templateVariables.clear();
         for (Pair<String, String> pair : curTemplateVariables) {
             final String value = pair.getSecond();
             if (value != null && value.trim().length() > 0) {
-                projectVariables.setProperty(pair.getFirst(), value);
+                projectVariables.templateVariables.add(TemplateVariable.build(pair.getFirst(),
+                                                                              value));
             }
         }
     }
@@ -150,15 +153,19 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     private void obtainVariablesPairs(final List<Pair<String, String>> macros) {
-        PerProjectTemplateManager projectTemplateManager = PerProjectTemplateManager.getInstance(project);
+        ProjectTemplateVariableManager projectTemplateManager = project.getService(ProjectTemplateVariableManager.class);
         macros.clear();
-        Properties projectVariables = projectTemplateManager.getProjectVariables();
-        final Set<String> macroNames = projectVariables.stringPropertyNames();
+        VariablesConfigurationState projectVariablesState = projectTemplateManager.getProjectVariables();
+        final Map<String, String> projectVariables =
+                projectVariablesState.templateVariables.stream()
+                                                       .collect(toMap(TemplateVariable::getName,
+                                                                      TemplateVariable::getValue));
+        final Set<String> macroNames = projectVariables.keySet();
         for (String name : macroNames) {
-            macros.add(Pair.create(name, projectVariables.getProperty(name)));
+            macros.add(Pair.create(name, projectVariables.get(name)));
         }
 
-        Collections.sort(macros, VARIABLES_COMPARATOR);
+        macros.sort(VARIABLES_COMPARATOR);
     }
 
     public void editVariable() {
@@ -170,18 +177,19 @@ public class TemplateVariablesTable extends JBTable {
         final String title = ApplicationBundle.message("title.edit.variable");
         final String variableName = pair.getFirst();
         final TemplateVariableEditor variableEditor = new TemplateVariableEditor(title, variableName, pair.getSecond(), new EditValidator(variableName));
-        variableEditor.setDefaultVariables(PerProjectTemplateManager.getInstance(project).getAllFileTemplatesVariables());
+        final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
+        variableEditor.setDefaultVariables(manager.getAllFileTemplatesVariables(project));
         variableEditor.show();
         if (variableEditor.isOK()) {
             curTemplateVariables.remove(selectedRow);
             curTemplateVariables.add(Pair.create(variableEditor.getName(), variableEditor.getValue()));
-            Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
+            curTemplateVariables.sort(VARIABLES_COMPARATOR);
             tableModel.fireTableDataChanged();
         }
     }
 
     public boolean isModified() {
-        final ArrayList<Pair<String, String>> variables = new ArrayList<Pair<String, String>>();
+        final ArrayList<Pair<String, String>> variables = new ArrayList<>();
         obtainVariablesPairs(variables);
         return !variables.equals(curTemplateVariables);
     }

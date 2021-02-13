@@ -15,12 +15,12 @@ import javax.swing.*;
  * Date: 2/14/14
  * Time: 7:38 PM
  */
-public class PerProjectTemplateVariableConfigurable implements Configurable.NoScroll, Configurable {
+public class ProjectTemplateVariableConfigurable implements Configurable.NoScroll, Configurable {
 
-    private Project project;
+    private final Project project;
     private TemplateVariablesConfigurationPanel panel;
 
-    public PerProjectTemplateVariableConfigurable(Project project) {
+    public ProjectTemplateVariableConfigurable(Project project) {
         this.project = project;
     }
 
@@ -49,7 +49,7 @@ public class PerProjectTemplateVariableConfigurable implements Configurable.NoSc
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         panel.commit();
     }
 
