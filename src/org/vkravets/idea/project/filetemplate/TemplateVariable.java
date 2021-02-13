@@ -23,4 +23,11 @@ public class TemplateVariable {
     public String getValue() {
         return value;
     }
+
+    public static TemplateVariable build(String name, String value) {
+        TemplateVariable templateVariable = new TemplateVariable();
+        templateVariable.name = name;
+        templateVariable.value = value;
+        return templateVariable;
+    }
 }

@@ -2,8 +2,6 @@ package org.vkravets.idea.project.filetemplate.configuration;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
 
 import javax.swing.*;
@@ -25,24 +23,9 @@ public class TemplateVariablesConfigurationPanel {
     public TemplateVariablesConfigurationPanel(Project project) {
         table = new TemplateVariablesTable(project);
         wholePanel.add(ToolbarDecorator.createDecorator(table).
-                setAddAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton anActionButton) {
-                        table.addVariable();
-                    }
-                }).
-                setRemoveAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton anActionButton) {
-                        table.removeSelectedMacros();
-                    }
-                }).
-                setEditAction(new AnActionButtonRunnable() {
-                    @Override
-                    public void run(AnActionButton anActionButton) {
-                        table.editVariable();
-                    }
-                }).
+                setAddAction(anActionButton -> table.addVariable()).
+                setRemoveAction(anActionButton -> table.removeSelectedMacros()).
+                setEditAction(anActionButton -> table.editVariable()).
                 disableUpDownActions().createPanel(), BorderLayout.CENTER);
 
     }
@@ -52,12 +35,7 @@ public class TemplateVariablesConfigurationPanel {
     }
 
     public void commit() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                table.commit();
-            }
-        });
+        ApplicationManager.getApplication().runWriteAction(() -> table.commit());
     }
 
     public void reset() {

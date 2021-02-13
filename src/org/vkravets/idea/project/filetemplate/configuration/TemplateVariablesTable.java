@@ -37,12 +37,8 @@ public class TemplateVariablesTable extends JBTable {
     private static final int NAME_COLUMN = 0;
     private static final int VALUE_COLUMN = 1;
 
-    private final List<Pair<String, String>> curTemplateVariables = new ArrayList<Pair<String, String>>();
-    private static final Comparator<Pair<String, String>> VARIABLES_COMPARATOR = new Comparator<Pair<String, String>>() {
-        public int compare(Pair<String, String> pair, Pair<String, String> pair1) {
-            return pair.getFirst().compareTo(pair1.getFirst());
-        }
-    };
+    private final List<Pair<String, String>> curTemplateVariables = new ArrayList<>();
+    private static final Comparator<Pair<String, String>> VARIABLES_COMPARATOR = Comparator.comparing(pair -> pair.getFirst());
 
     private final Project project;
 
@@ -82,8 +78,8 @@ public class TemplateVariablesTable extends JBTable {
         variableEditor.show();
         if (variableEditor.isOK()) {
             final String name = variableEditor.getName();
-            curTemplateVariables.add(new Pair<String, String>(name, variableEditor.getValue()));
-            Collections.sort(curTemplateVariables, VARIABLES_COMPARATOR);
+            curTemplateVariables.add(new Pair<>(name, variableEditor.getValue()));
+            curTemplateVariables.sort(VARIABLES_COMPARATOR);
             final int index = indexOfVariableWithName(name);
             tableModel.fireTableDataChanged();
             setRowSelectionInterval(index, index);
@@ -118,14 +114,12 @@ public class TemplateVariablesTable extends JBTable {
         final ProjectTemplateVariableManager perProjectTemplateVariableManager =
                 project.getService(ProjectTemplateVariableManager.class);
         VariablesConfigurationState projectVariables = perProjectTemplateVariableManager.getProjectVariables();
-        projectVariables.getTemplateVariables().clear();
+        projectVariables.templateVariables.clear();
         for (Pair<String, String> pair : curTemplateVariables) {
             final String value = pair.getSecond();
             if (value != null && value.trim().length() > 0) {
-                TemplateVariable variable = new TemplateVariable();
-                variable.name = pair.getFirst();
-                variable.value = value;
-                projectVariables.getTemplateVariables().add(variable);
+                projectVariables.templateVariables.add(TemplateVariable.build(pair.getFirst(),
+                                                                              value));
             }
         }
     }
@@ -162,10 +156,10 @@ public class TemplateVariablesTable extends JBTable {
         ProjectTemplateVariableManager projectTemplateManager = project.getService(ProjectTemplateVariableManager.class);
         macros.clear();
         VariablesConfigurationState projectVariablesState = projectTemplateManager.getProjectVariables();
-        final Map<String, String> projectVariables = projectVariablesState.getTemplateVariables()
-                                                            .stream()
-                                                            .collect(toMap(TemplateVariable::getName,
-                                                                           TemplateVariable::getValue));
+        final Map<String, String> projectVariables =
+                projectVariablesState.templateVariables.stream()
+                                                       .collect(toMap(TemplateVariable::getName,
+                                                                      TemplateVariable::getValue));
         final Set<String> macroNames = projectVariables.keySet();
         for (String name : macroNames) {
             macros.add(Pair.create(name, projectVariables.get(name)));
@@ -195,7 +189,7 @@ public class TemplateVariablesTable extends JBTable {
     }
 
     public boolean isModified() {
-        final ArrayList<Pair<String, String>> variables = new ArrayList<Pair<String, String>>();
+        final ArrayList<Pair<String, String>> variables = new ArrayList<>();
         obtainVariablesPairs(variables);
         return !variables.equals(curTemplateVariables);
     }

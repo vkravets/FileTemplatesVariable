@@ -17,7 +17,7 @@ import javax.swing.*;
  */
 public class ProjectTemplateVariableConfigurable implements Configurable.NoScroll, Configurable {
 
-    private Project project;
+    private final Project project;
     private TemplateVariablesConfigurationPanel panel;
 
     public ProjectTemplateVariableConfigurable(Project project) {
@@ -49,7 +49,7 @@ public class ProjectTemplateVariableConfigurable implements Configurable.NoScrol
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         panel.commit();
     }
 

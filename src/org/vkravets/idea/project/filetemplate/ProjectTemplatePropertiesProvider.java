@@ -23,10 +23,9 @@ public class ProjectTemplatePropertiesProvider implements DefaultTemplatePropert
         final ProjectTemplateVariableManager manager = project.getService(ProjectTemplateVariableManager.class);
 
         final VariablesConfigurationState projectVariables = manager.getProjectVariables();
-        final Map<String, String> variablesMap = projectVariables.getTemplateVariables()
-                                                                 .stream()
-                                                                 .collect(toMap(TemplateVariable::getName,
-                                                                                TemplateVariable::getValue));
+        final Map<String, String> variablesMap = projectVariables.templateVariables.stream()
+                                                                                   .collect(toMap(TemplateVariable::getName,
+                                                                                                  TemplateVariable::getValue));
         properties.putAll(variablesMap);
     }
 }

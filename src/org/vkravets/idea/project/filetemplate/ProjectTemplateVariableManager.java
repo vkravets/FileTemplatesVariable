@@ -7,11 +7,11 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.apache.velocity.runtime.parser.ParseException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,13 +20,12 @@ import static java.util.stream.Collectors.toMap;
  */
 @State(name = "ProjectTemplateVariables",
         storages = {
-                @Storage(value = StoragePathMacros.WORKSPACE_FILE),
-                @Storage(value = "template/template_variables.xml")
+            @Storage(value = "template/template_variable_settings.xml")
         }
       )
 public class ProjectTemplateVariableManager implements PersistentStateComponent<VariablesConfigurationState> {
 
-    public VariablesConfigurationState state;
+    public VariablesConfigurationState state = new VariablesConfigurationState();
 
     private static final Logger logger = Logger.getInstance("#org.vkravets.idea.project.filetemplate.ProjectTemplateVariableManager");
 
@@ -40,7 +39,7 @@ public class ProjectTemplateVariableManager implements PersistentStateComponent<
     }
 
     @Override
-    public void loadState(VariablesConfigurationState element) {
+    public void loadState(@NotNull VariablesConfigurationState element) {
         this.state = element;
     }
 
