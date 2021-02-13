@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.jetbrains.idea.project.template.variables</id>
   <name>File Template Variables</name>
-  <version>0.4.4</version>
+  <version>0.4.5</version>
   <vendor email="vova.kravets@gmail.com" url="https://github.com/vkravets/FileTemplatesVariable"/>
 
   <description><![CDATA[
